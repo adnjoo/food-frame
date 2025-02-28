@@ -4,6 +4,7 @@ import { SafeAreaView, View } from 'react-native';
 
 import BottomNav from './BottomNav';
 import AnalyticsScreen from './screens/Analytics';
+import CameraScreen from './screens/CameraScreen';
 import HomeScreen from './screens/Home';
 import SettingsScreen from './screens/Settings';
 
@@ -19,6 +20,7 @@ export default function Navigator() {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Analytics" component={AnalyticsScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
+            <Stack.Screen name="Camera" component={CameraScreen} />
           </Stack.Navigator>
         </View>
 
