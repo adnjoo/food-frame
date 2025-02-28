@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-export default function FoodTrackerScreen({ path }: { path: string }) {
+export default function FoodTrackerScreen() {
   return (
     <View className="flex-1 bg-gray-100 p-4">
       {/* Header */}
