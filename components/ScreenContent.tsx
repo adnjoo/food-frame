@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 
+import BottomNav from './BottomNav';
 import Home from './screens/Home';
 
 type ScreenContentProps = {
@@ -15,6 +16,7 @@ export const ScreenContent = ({ title, path, children }: ScreenContentProps) => 
       <View className="my-7 h-[1px] w-4/5 bg-gray-200" />
       <Home path={path} />
       {children}
+      <BottomNav />
     </View>
   );
 };
