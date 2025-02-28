@@ -1,5 +1,5 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { readAsStringAsync, EncodingType } from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 import OpenAI from 'openai';
 import { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
@@ -38,17 +38,30 @@ export default function CameraScreen() {
     if (!cameraRef.current) return;
     const photo = await cameraRef.current.takePictureAsync({ base64: true });
     setImageUri(photo.uri);
+    setCalories('Analyzing...'); // Reset before analysis
     analyzeImage(photo.uri);
   };
 
-  const analyzeImage = async (uri: string) => {
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      base64: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      setCalories('Analyzing...'); // Reset before analysis
+      analyzeImage(result.assets[0].base64!);
+    }
+  };
+
+  const analyzeImage = async (base64: string) => {
     try {
-      console.log('📸 Captured image URI:', uri);
+      console.log('📸 Processing Image');
 
-      // Convert image to Base64
-      const base64 = await readAsStringAsync(uri, { encoding: EncodingType.Base64 });
-
-      // OpenAI GPT-4 Vision API Call
+      // OpenAI GPT-4o API Call
       const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
@@ -83,12 +96,15 @@ export default function CameraScreen() {
             <TouchableOpacity style={styles.button} onPress={takePicture}>
               <Text style={styles.text}>Capture</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pickImage}>
+              <Text style={styles.text}>Choose from Photos</Text>
+            </TouchableOpacity>
           </View>
         </CameraView>
       ) : (
         <View style={styles.previewContainer}>
           <Image source={{ uri: imageUri }} style={styles.preview} />
-          <Text style={styles.caloriesText}>{calories || 'Analyzing...'}</Text>
+          <Text className="my-2 text-lg font-bold">{calories || 'Analyzing...'}</Text>
           <Button title="Retake" onPress={() => setImageUri(null)} />
         </View>
       )}
@@ -137,10 +153,5 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 10,
     marginBottom: 10,
-  },
-  caloriesText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 10,
   },
 });
