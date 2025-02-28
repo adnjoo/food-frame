@@ -23,15 +23,6 @@ export default function SettingsScreen() {
         <Text className="text-lg font-bold">Settings</Text>
       </View>
 
-      {/* Account Section */}
-      <View className="mt-4 rounded-lg bg-white p-4 shadow-md">
-        <Text className="text-xl font-bold">Account</Text>
-        <Text className="mt-2">Email: {supabase.auth.getUser()?.email ?? 'Not Logged In'}</Text>
-        <TouchableOpacity className="mt-2 rounded-lg bg-blue-500 p-2">
-          <Text className="text-center text-white">Change Password</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Notifications */}
       <View className="mt-4 flex-row items-center justify-between rounded-lg bg-white p-4 shadow-md">
         <Text className="text-lg">Enable Notifications</Text>
