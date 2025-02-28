@@ -19,8 +19,10 @@ export default function BottomNav() {
         </TouchableOpacity>
       </View>
 
-      {/* Floating Plus Button (Independent from Tabs) */}
-      <TouchableOpacity className="absolute -top-6 right-4 h-16 w-16 items-center justify-center rounded-full bg-black shadow-lg">
+      {/* Floating Plus Button (Navigates to Camera) */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Camera')}
+        className="absolute -top-6 right-4 h-16 w-16 items-center justify-center rounded-full bg-black shadow-lg">
         <Text className="text-2xl text-white">+</Text>
       </TouchableOpacity>
     </View>
