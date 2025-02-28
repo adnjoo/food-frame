@@ -12,7 +12,7 @@ export default function BottomNav() {
       <TouchableOpacity onPress={() => navigation.navigate('Analytics')}>
         <Text>Analytics</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
         <Text>Settings</Text>
       </TouchableOpacity>
       <View className="h-10 w-10 items-center justify-center rounded-full bg-black">
