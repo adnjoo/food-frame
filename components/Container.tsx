@@ -9,6 +9,6 @@ export const Container = ({ children }: { children: React.ReactNode }) => {
 };
 
 const styles = {
-  container: { flex: 1, margin: 6 },
-  inner: { flex: 1 }, // Ensures children fill available space
+  container: { flex: 1, margin: 6, backgroundColor: 'white' }, // Ensure white background fills
+  inner: { flex: 1 }, // Add bottom padding for safe area
 };
