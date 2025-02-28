@@ -1,14 +1,6 @@
-import { Container } from 'components/Container';
-import { ScreenContent } from 'components/ScreenContent';
-import { StatusBar } from 'expo-status-bar';
-
+import Navigator from 'components/Navigator';
 import './global.css';
 
 export default function App() {
-  return (
-    <Container>
-      <ScreenContent title="Food Tracker AI" path="App.tsx" />
-      <StatusBar style="auto" />
-    </Container>
-  );
+  return <Navigator />;
 }
