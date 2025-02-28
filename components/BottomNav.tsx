@@ -5,7 +5,7 @@ export default function BottomNav() {
   const navigation = useNavigation();
 
   return (
-    <View className="absolute bottom-0 left-0 right-0 flex flex-row justify-around bg-white py-4 shadow-md">
+    <View className="absolute bottom-0 left-0 right-0 flex flex-row justify-around bg-white py-8 shadow-md">
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <Text>Home</Text>
       </TouchableOpacity>
