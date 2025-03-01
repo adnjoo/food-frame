@@ -1,6 +1,10 @@
+Here's your updated README with clearer instructions for switching between development builds and Expo Go:
+
+---
+
 # Food-Frame 🍽️
 
-Food-Frame is an AI-powered calorie tracker built with [Expo Router](https://expo.github.io/router/). 
+Food-Frame is an AI-powered calorie tracker built with [Expo Router](https://expo.github.io/router/).
 
 ## 📸 Screenshot
 
@@ -16,15 +20,42 @@ npm install
 
 ### 2. Start the App
 
+#### Development Build:
+
+If you are using a development build, start the app with:
+
+```bash
+npx expo start -c  # Clear cache and start Expo
+```
+
+Then press:
+
+- **`s`** to switch between **development build** and **Expo Go**
+- **`a`** to run on an **Android emulator**
+- **`i`** to run on an **iOS simulator**
+
+Alternatively, you can directly start with Expo Go:
+
+```bash
+npx expo start --go
+```
+
+#### Running on Specific Platforms:
+
 For iOS:
+
 ```bash
 npm run ios
 ```
+
 For Android:
+
 ```bash
 npm run android
 ```
+
 For Web:
+
 ```bash
 npm run web
 ```
@@ -65,9 +96,13 @@ Replace `your_supabase_anon_key` and `your_openai_api_key` with your actual keys
   ```bash
   npm install
   ```
-- Run the app:
+- Start the app:
   ```bash
-  npm run ios # or npm run android
+  npx expo start -c
+  ```
+- If needed, switch to **Expo Go** by pressing `s`, or use:
+  ```bash
+  npx expo start --go
   ```
 
 ## 🤝 Contributing
@@ -77,3 +112,7 @@ Contributions are welcome! Feel free to submit issues or pull requests.
 ## 📜 License
 
 [MIT License](./LICENSE.md)
+
+---
+
+This version makes it clear how to switch between Expo Go and a development build. 🚀
