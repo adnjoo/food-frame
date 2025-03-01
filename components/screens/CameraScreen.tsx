@@ -1,8 +1,11 @@
+import { Ionicons } from '@expo/vector-icons';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import OpenAI from 'openai';
 import { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+
+import CrosshairOverlay from '../CrosshairOverlay';
 
 // Load API Key (Ensure this is set in your Expo environment)
 const OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
@@ -89,15 +92,20 @@ export default function CameraScreen() {
     <View style={styles.container}>
       {!imageUri ? (
         <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
+          {/* Add Crosshair Overlay */}
+          <CrosshairOverlay />
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-              <Text style={styles.text}>Flip Camera</Text>
+              <Ionicons name="camera-reverse" size={24} color="white" />
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.button} onPress={takePicture}>
-              <Text style={styles.text}>Capture</Text>
+              <Ionicons name="camera" size={24} color="white" />
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.button} onPress={pickImage}>
-              <Text style={styles.text}>Choose from Photos</Text>
+              <Ionicons name="images" size={24} color="white" />
             </TouchableOpacity>
           </View>
         </CameraView>
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingHorizontal: 20,
     alignItems: 'flex-end',
-    marginBottom: 40,
+    marginBottom: 100,
   },
   button: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
