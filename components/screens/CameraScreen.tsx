@@ -5,6 +5,7 @@ import OpenAI from 'openai';
 import { ChatCompletionContentPartImage } from 'openai/resources/chat/completions';
 import { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { supabase } from 'utils/supabase';
 
 import CrosshairOverlay from '../CrosshairOverlay';
 
@@ -88,7 +89,10 @@ export default function CameraScreen() {
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Identify the food item and estimate its calories.' },
+              {
+                type: 'text',
+                text: 'Identify the food item and provide the estimated calorie count in JSON format with keys: food_name, calories.',
+              },
               imageData, // ✅ Now correctly formatted
             ],
           },
@@ -96,12 +100,46 @@ export default function CameraScreen() {
         max_tokens: 300,
       });
 
-      // Extract and set calorie data
-      setCalories(response.choices[0].message.content);
-      console.log('✅ OpenAI Response:', response.choices[0].message.content);
+      let responseText = response.choices[0].message.content as string;
+      console.log('📝 OpenAI Raw Response:', responseText);
+
+      // ✅ Remove Markdown formatting (```json ... ```)
+      responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
+
+      // Parse cleaned JSON
+      const data = JSON.parse(responseText);
+
+      setCalories(`${data.food_name}: ${data.calories} kcal`);
+      logCalories(data.food_name, data.calories, base64); // Save to database
     } catch (error) {
       console.error('❌ Error analyzing image:', error);
       setCalories('Failed to analyze image.');
+    }
+  };
+
+  const logCalories = async (food_name: string, calories: number) => {
+    try {
+      console.log('📤 Logging food calories to Supabase...');
+
+      // Get current user ID from Supabase Auth
+      const { data: user, error: authError } = await supabase.auth.getUser();
+      if (authError || !user?.user?.id) {
+        throw new Error('User not authenticated');
+      }
+
+      // Insert food log into the database
+      const { error } = await supabase.from('food_logs').insert([
+        {
+          user_id: user.user.id, // Required for RLS policies
+          food_name,
+          calories,
+        },
+      ]);
+
+      if (error) throw error;
+      console.log('✅ Food log saved:', food_name, calories);
+    } catch (error) {
+      console.error('❌ Error saving food log:', error);
     }
   };
 
