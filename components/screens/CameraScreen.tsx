@@ -39,10 +39,17 @@ export default function CameraScreen() {
 
   const takePicture = async () => {
     if (!cameraRef.current) return;
-    const photo = await cameraRef.current.takePictureAsync({ base64: true });
+    const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
+
+    // Calculate Base64 image size
+    const base64Length = photo.base64.length * (3 / 4) - 2; // Convert Base64 to byte size
+    const imageSizeKB = base64Length / 1024; // Convert bytes to KB
+
+    console.log(`📸 Image Size: ${imageSizeKB.toFixed(2)} KB`); // Log size in KB
+
     setImageUri(photo.uri);
-    setCalories('Analyzing...'); // Reset before analysis
-    analyzeImage(photo.uri);
+    setCalories('Analyzing...');
+    analyzeImage(photo.base64);
   };
 
   const pickImage = async () => {
@@ -64,15 +71,24 @@ export default function CameraScreen() {
     try {
       console.log('📸 Processing Image');
 
+      // Ensure the Base64 string is correctly formatted
+      const imageData: ChatCompletionContentPartImage = {
+        type: 'image_url',
+        image_url: {
+          url: `data:image/jpeg;base64,${base64}`, // ✅ Correct Base64 format
+          detail: 'auto', // ✅ Improve processing accuracy
+        },
+      };
+
       // OpenAI GPT-4o API Call
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o-mini', // gpt-4o-mini || gpt-4o
         messages: [
           {
             role: 'user',
             content: [
               { type: 'text', text: 'Identify the food item and estimate its calories.' },
-              { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } },
+              imageData, // ✅ Now correctly formatted
             ],
           },
         ],
