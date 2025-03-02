@@ -1,6 +1,6 @@
-import { Button, Input } from '@rneui/themed';
+import { Input } from '@rneui/themed';
 import React, { useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Pressable, ActivityIndicator } from 'react-native';
 
 import { supabase } from '../../utils/supabase';
 
@@ -57,20 +57,25 @@ export default function Auth() {
       />
 
       {/* Sign-in Button */}
-      <Button
-        title="Sign In"
+      <Pressable
         onPress={signInWithEmail}
-        loading={loading}
-        buttonStyle={{ backgroundColor: '#4CAF50', borderRadius: 25, width: '100%', padding: 10 }}
-      />
+        className="w-[200px] items-center justify-center rounded-2xl bg-green-600 p-3"
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+        disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color="#FFF" />
+        ) : (
+          <Text className="text-lg font-bold text-white">Sign In</Text>
+        )}
+      </Pressable>
 
       {/* Sign-up Button */}
-      <Button
-        title="Sign Up"
+      <Pressable
         onPress={signUpWithEmail}
-        type="outline"
-        buttonStyle={{ borderRadius: 25, width: '100%', padding: 10, marginTop: 10 }}
-      />
+        className="mt-2 w-[200px] items-center justify-center rounded-2xl border border-gray-500 p-3"
+        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+        <Text className="text-lg font-bold text-gray-700">Sign Up</Text>
+      </Pressable>
 
       {/* OR Divider */}
       <Text className="my-5 text-gray-500">OR</Text>
