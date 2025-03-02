@@ -73,27 +73,25 @@ export default function CameraScreen() {
     try {
       console.log('📸 Processing Image');
 
-      // Ensure the Base64 string is correctly formatted
       const imageData: ChatCompletionContentPartImage = {
         type: 'image_url',
         image_url: {
-          url: `data:image/jpeg;base64,${base64}`, // ✅ Correct Base64 format
-          detail: 'auto', // ✅ Improve processing accuracy
+          url: `data:image/jpeg;base64,${base64}`,
+          detail: 'auto',
         },
       };
 
-      // OpenAI GPT-4o API Call
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini', // gpt-4o-mini || gpt-4o
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Identify the food item and provide the estimated calorie count in JSON format with keys: food_name, calories.',
+                text: 'Identify the food item and provide the estimated nutritional values in JSON format with keys: food_name, calories, protein, carbs, fat. Only return valid JSON without any explanations or extra text.',
               },
-              imageData, // ✅ Now correctly formatted
+              imageData,
             ],
           },
         ],
@@ -103,41 +101,52 @@ export default function CameraScreen() {
       let responseText = response.choices[0].message.content as string;
       console.log('📝 OpenAI Raw Response:', responseText);
 
-      // ✅ Remove Markdown formatting (```json ... ```)
-      responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
+      // ✅ Fix: Extract JSON using a regular expression
+      const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/);
+      if (jsonMatch) {
+        responseText = jsonMatch[1]; // Extract the JSON content inside the code block
+      }
 
-      // Parse cleaned JSON
-      const data = JSON.parse(responseText);
+      const data = JSON.parse(responseText.trim()); // Ensure it's parsed correctly
 
-      setCalories(`${data.food_name}: ${data.calories} kcal`);
-      logCalories(data.food_name, data.calories, base64); // Save to database
+      setCalories(
+        `${data.food_name}: ${data.calories} kcal\nProtein: ${data.protein}g | Carbs: ${data.carbs}g | Fat: ${data.fat}g`
+      );
+
+      logCalories(data.food_name, data.calories, data.protein, data.carbs, data.fat);
     } catch (error) {
       console.error('❌ Error analyzing image:', error);
       setCalories('Failed to analyze image.');
     }
   };
 
-  const logCalories = async (food_name: string, calories: number) => {
+  // ✅ Updated to store protein, carbs, and fat
+  const logCalories = async (
+    food_name: string,
+    calories: number,
+    protein: number,
+    carbs: number,
+    fat: number
+  ) => {
     try {
-      console.log('📤 Logging food calories to Supabase...');
+      console.log('📤 Logging food data to Supabase...');
 
-      // Get current user ID from Supabase Auth
       const { data: user, error: authError } = await supabase.auth.getUser();
-      if (authError || !user?.user?.id) {
-        throw new Error('User not authenticated');
-      }
+      if (authError || !user?.user?.id) throw new Error('User not authenticated');
 
-      // Insert food log into the database
       const { error } = await supabase.from('food_logs').insert([
         {
-          user_id: user.user.id, // Required for RLS policies
+          user_id: user.user.id,
           food_name,
           calories,
+          protein,
+          carbs,
+          fat,
         },
       ]);
 
       if (error) throw error;
-      console.log('✅ Food log saved:', food_name, calories);
+      console.log('✅ Food log saved:', food_name, calories, protein, carbs, fat);
     } catch (error) {
       console.error('❌ Error saving food log:', error);
     }
