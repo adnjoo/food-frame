@@ -1,14 +1,11 @@
-Here's your updated README with clearer instructions for switching between development builds and Expo Go:
+# Food-Frame
 
----
+<img src='./assets/logo.png' width='100' >
 
-# Food-Frame 🍽️
+![App Screenshot](./assets/screenshot-20250228.png)
 
 Food-Frame is an AI-powered calorie tracker built with [Expo Router](https://expo.github.io/router/).
 
-## 📸 Screenshot
-
-![App Screenshot](./assets/screenshot-20250228.png)
 
 ## 🚀 Getting Started
 
@@ -112,7 +109,3 @@ Contributions are welcome! Feel free to submit issues or pull requests.
 ## 📜 License
 
 [MIT License](./LICENSE.md)
-
----
-
-This version makes it clear how to switch between Expo Go and a development build. 🚀
