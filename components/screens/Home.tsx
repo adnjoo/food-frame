@@ -1,9 +1,11 @@
+import { useNavigation } from '@react-navigation/native';
 import FoodLogItem from 'components/FoodLogItem'; // Adjust import path
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { supabase } from 'utils/supabase'; // Adjust based on your project structure
 
-export default function FoodTrackerScreen() {
+export default function Home() {
+  const navigation = useNavigation();
   const [foodLogs, setFoodLogs] = useState<any[]>([]);
 
   useEffect(() => {
@@ -66,7 +68,11 @@ export default function FoodTrackerScreen() {
         <FlatList
           data={foodLogs}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <FoodLogItem log={item} />}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigation.navigate('/nutrition')}> 
+              <FoodLogItem log={item} />
+            </TouchableOpacity>
+          )}
         />
       </View>
     </View>
