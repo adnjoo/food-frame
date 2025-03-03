@@ -1,6 +1,7 @@
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import FoodLogItem from 'components/FoodLogItem'; // Adjust import path
-import { useEffect, useState, useCallback } from 'react';
+import Logo from 'components/icons/Logo';
+import { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { supabase } from 'utils/supabase'; // Adjust based on your project structure
 
@@ -30,8 +31,9 @@ export default function Home() {
   return (
     <View className="flex-1 bg-gray-100 p-4">
       {/* Header */}
-      <View className="rounded-lg bg-white p-4 shadow-md">
-        <Text className="text-lg font-bold">Food Tracker AI</Text>
+      <View className="flex flex-row items-center rounded-lg bg-white p-4 shadow-md">
+        <Logo width={30} height={30} fill="#0184ff" />
+        <Text className="pl-2 text-lg font-bold">FoodFrame</Text>
       </View>
 
       {/* Date Selection */}
