@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { supabase } from 'utils/supabase'; // Adjust based on project structure
 
 export default function NutritionScreen({ route }) {
@@ -27,6 +27,26 @@ export default function NutritionScreen({ route }) {
     };
     fetchFoodLog();
   }, [foodLogId]);
+
+  const handleDelete = async () => {
+    Alert.alert('Delete Entry', 'Are you sure you want to delete this food log?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          const { error } = await supabase.from('food_logs').delete().eq('id', foodLogId);
+
+          if (error) {
+            console.error('Error deleting food log:', error);
+          } else {
+            console.log('Food log deleted');
+            navigation.navigate('Home', { refresh: true });
+          }
+        },
+      },
+    ]);
+  };
 
   if (!foodLog) {
     return <View className="flex-1 bg-white p-4" />;
@@ -82,8 +102,8 @@ export default function NutritionScreen({ route }) {
       </View>
 
       <View className="mt-6 flex-row justify-between">
-        <TouchableOpacity className="rounded-lg bg-gray-300 px-6 py-3">
-          <Text className="text-lg">Fix Results</Text>
+        <TouchableOpacity className="rounded-lg bg-red-500 px-6 py-3" onPress={handleDelete}>
+          <Text className="text-lg text-white">Delete</Text>
         </TouchableOpacity>
         <TouchableOpacity className="rounded-lg bg-black px-6 py-3">
           <Text className="text-lg text-white">Done</Text>

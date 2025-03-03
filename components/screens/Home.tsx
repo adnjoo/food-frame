@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import FoodLogItem from 'components/FoodLogItem'; // Adjust import path
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { supabase } from 'utils/supabase'; // Adjust based on your project structure
 
@@ -8,22 +8,24 @@ export default function Home() {
   const navigation = useNavigation();
   const [foodLogs, setFoodLogs] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchFoodLogs = async () => {
-      const { data, error } = await supabase
-        .from('food_logs')
-        .select('*')
-        .order('created_at', { ascending: false });
+  const fetchFoodLogs = async () => {
+    const { data, error } = await supabase
+      .from('food_logs')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching food logs:', error);
-      } else {
-        setFoodLogs(data);
-      }
-    };
+    if (error) {
+      console.error('Error fetching food logs:', error);
+    } else {
+      setFoodLogs(data);
+    }
+  };
 
-    fetchFoodLogs();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchFoodLogs();
+    }, [])
+  );
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
@@ -63,7 +65,7 @@ export default function Home() {
       </View>
 
       {/* Recently Logged */}
-      <View className="mt-4 rounded-lg bg-white p-4 shadow-md">
+      <View className="mt-4 flex-1 rounded-lg bg-white p-4 shadow-md">
         <Text className="text-lg font-bold">Recently Logged</Text>
         <FlatList
           data={foodLogs}
@@ -74,6 +76,8 @@ export default function Home() {
               <FoodLogItem log={item} />
             </TouchableOpacity>
           )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </View>
