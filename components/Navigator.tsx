@@ -10,6 +10,7 @@ import AnalyticsScreen from './screens/Analytics';
 import AuthScreen from './screens/Auth';
 import CameraScreen from './screens/CameraScreen';
 import HomeScreen from './screens/Home';
+import NutritionScreen from './screens/NutritionScreen';
 import SettingsScreen from './screens/Settings';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,7 @@ export default function Navigator() {
                 <Stack.Screen name="Analytics" component={AnalyticsScreen} />
                 <Stack.Screen name="Settings" component={SettingsScreen} />
                 <Stack.Screen name="Camera" component={CameraScreen} />
+                <Stack.Screen name="Nutrition" component={NutritionScreen} />
               </>
             ) : (
               <Stack.Screen name="Auth" component={AuthScreen} />
