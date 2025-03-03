@@ -1,15 +1,45 @@
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { supabase } from 'utils/supabase'; // Adjust based on project structure
 
-export default function NutritionScreen() {
+export default function NutritionScreen({ route }) {
+  console.log('route:', route);
   const navigation = useNavigation();
+  const { foodLogId } = route.params || {};
+  const [foodLog, setFoodLog] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const calories = 250 * quantity;
-  const protein = 3 * quantity;
-  const carbs = 30 * quantity;
-  const fats = 5 * quantity;
-  const healthScore = 4;
+
+  useEffect(() => {
+    const fetchFoodLog = async () => {
+      if (!foodLogId) return;
+      const { data, error } = await supabase
+        .from('food_logs')
+        .select('id, food_name, calories, protein, carbs, fat, image_url')
+        .eq('id', foodLogId)
+        .single();
+      if (error) {
+        console.error('Error fetching food log:', error);
+      } else {
+        console.log('data:', data);
+        setFoodLog(data);
+      }
+    };
+    fetchFoodLog();
+  }, [foodLogId]);
+
+  if (!foodLog) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white p-4">
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  const calories = foodLog.calories * quantity;
+  const protein = foodLog.protein * quantity;
+  const carbs = foodLog.carbs * quantity;
+  const fats = foodLog.fat * quantity;
 
   return (
     <View className="flex-1 bg-white p-4">
@@ -20,11 +50,11 @@ export default function NutritionScreen() {
       <Text className="mb-4 text-center text-2xl font-bold">Nutrition</Text>
 
       <Image
-        source={{ uri: 'https://via.placeholder.com/315x200' }}
+        source={{ uri: foodLog.image_url || 'https://via.placeholder.com/315x200' }}
         className="mb-4 h-48 w-full rounded-lg"
       />
 
-      <Text className="text-lg font-bold">Beer and Snack</Text>
+      <Text className="text-lg font-bold">{foodLog.food_name}</Text>
 
       <View className="mt-2 flex-row items-center">
         <TouchableOpacity
@@ -53,16 +83,6 @@ export default function NutritionScreen() {
         <Text className="text-lg">
           Fats: <Text className="font-bold">{fats}g</Text>
         </Text>
-      </View>
-
-      <View className="mt-4">
-        <Text className="text-lg">Health Score: {healthScore}/10</Text>
-        <View className="mt-1 h-2 w-full rounded-full bg-gray-300">
-          <View
-            style={{ width: `${(healthScore / 10) * 100}%` }}
-            className="h-full rounded-full bg-yellow-500"
-          />
-        </View>
       </View>
 
       <View className="mt-6 flex-row justify-between">
