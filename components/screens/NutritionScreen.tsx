@@ -1,13 +1,13 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { supabase } from 'utils/supabase'; // Adjust based on project structure
 
 export default function NutritionScreen({ route }) {
   console.log('route:', route);
   const navigation = useNavigation();
   const { foodLogId } = route.params || {};
-  const [foodLog, setFoodLog] = useState(null);
+  const [foodLog, setFoodLog] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -29,11 +29,7 @@ export default function NutritionScreen({ route }) {
   }, [foodLogId]);
 
   if (!foodLog) {
-    return (
-      <View className="flex-1 items-center justify-center bg-white p-4">
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <View className="flex-1 bg-white p-4" />;
   }
 
   const calories = foodLog.calories * quantity;
