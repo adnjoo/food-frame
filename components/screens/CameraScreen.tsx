@@ -59,8 +59,18 @@ export default function CameraScreen() {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       base64: true,
-      quality: 1,
+      quality: 0.5, // Reduce image quality (range: 0.1 - 1)
     });
+
+    if (!result.canceled && result.assets[0].base64) {
+      const base64Length = result.assets[0].base64.length;
+      const fileSizeInBytes = Math.ceil((base64Length * 3) / 4); // Approximate bytes
+      const fileSizeInKB = fileSizeInBytes / 1024; // Convert to KB
+
+      console.log(`Image size: ${fileSizeInKB.toFixed(2)} KB`);
+    } else {
+      console.log('No image selected');
+    }
 
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
