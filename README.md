@@ -1,8 +1,6 @@
-# Food-Frame
+# FoodFrame
 
-<img src='./assets/logo.png' width='100' >
-
-![App Screenshot](./assets/screenshot-20250228.png)
+<img src='./assets/screenshot-20250303.png' width='320'>
 
 Food-Frame is an AI-powered calorie tracker built with [Expo Router](https://expo.github.io/router/).
 
