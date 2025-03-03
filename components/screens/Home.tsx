@@ -69,7 +69,7 @@ export default function Home() {
           data={foodLogs}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('/nutrition')}> 
+            <TouchableOpacity onPress={() => navigation.navigate('Nutrition')}> 
               <FoodLogItem log={item} />
             </TouchableOpacity>
           )}
